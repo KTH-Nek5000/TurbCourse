@@ -3,7 +3,7 @@
 #
 [GENERAL] 
 
-startFrom = start0.f04000 time=0.
+#startFrom = start0.f04000 time=0.
 stopAt = endTime
 endTime = 1000
 
