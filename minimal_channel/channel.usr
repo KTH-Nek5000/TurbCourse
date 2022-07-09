@@ -1,0 +1,127 @@
+c-----------------------------------------------------------------------
+      subroutine uservp (ix,iy,iz,ieg)
+      implicit none
+      integer ix,iy,iz,ieg
+      return
+      end
+c-----------------------------------------------------------------------
+      subroutine userf  (ix,iy,iz,ieg)
+      implicit none
+      include 'SIZE'
+      include 'NEKUSE'
+
+      integer ix,iy,iz,ieg
+
+      ffx = 0.0 
+      ffy = 0.0
+      ffz = 0.0
+
+      return
+      end
+c-----------------------------------------------------------------------
+      subroutine userq  (ix,iy,iz,ieg)
+      implicit none
+      integer ix,iy,iz,ieg
+      return
+      end
+c-----------------------------------------------------------------------
+      subroutine userchk
+      implicit none
+      return
+      end
+c-----------------------------------------------------------------------
+      subroutine userbc (ix,iy,iz,iside,ieg)
+      implicit none
+      integer ix,iy,iz,iside,ieg
+      return
+      end
+c-----------------------------------------------------------------------
+      subroutine useric (ix,iy,iz,ieg)
+      implicit none
+      include 'SIZE'
+      include 'TOTAL'
+      include 'NEKUSE'
+      integer ix,iy,iz,ieg
+      real kx, kz
+      real eps, eps1
+      real alpha, beta
+
+      real betam,xlen,zlen
+      common /userfile/ xlen,zlen,betam
+
+      ux = (1-(1-y)**2)*3/2
+
+      eps = 2e-3
+      eps1 = 1e-4
+      kx  = 3
+      kz  = 4
+
+      alpha = kx * 2*pi/xlen
+      beta  = kz * 2*pi/zlen 
+
+      ! add perturbation to trigger turbulence 
+      ux  = ux+ eps*beta  * sin(alpha*x)*cos(beta*z) +
+     &     	eps1*sin(2*x**5-150000*z**3*y**5+z**4+50000*y**7)
+      uy  =       eps       * sin(alpha*x)*sin(beta*z)+
+     &     	eps1*sin(x**3-400000*z**3*y**5+z**3+100000*y**7)
+      uz  =      -eps*alpha * cos(alpha*x)*sin(beta*z)
+
+      return
+      end
+c-----------------------------------------------------------------------
+      subroutine usrdat   ! This routine to modify element vertices
+      implicit none
+      include 'SIZE'      ! _before_ mesh is generated, which 
+      include 'TOTAL'     ! guarantees GLL mapping of mesh.
+
+      integer n,i
+      real xmin,xmax,ymin,ymax,zmin,zmax,xscale,zscale
+
+      real,external :: glmin,glmax
+      real xlen,zlen,betam
+      common /userfile/ xlen,zlen,betam
+
+c     domain size and mesh parameters
+      betam = 1.5
+      xlen = pi
+      zlen = 0.3*pi
+
+      n = nelv * 2**ldim
+      xmin = glmin(xc,n)
+      xmax = glmax(xc,n)
+      ymin = glmin(yc,n)
+      ymax = glmax(yc,n)
+      zmin = glmin(zc,n)
+      zmax = glmax(zc,n)
+
+      xscale = XLEN/(xmax-xmin)
+      zscale = ZLEN/(zmax-zmin)
+
+      do i=1,n
+         xc(i,1) = xscale*xc(i,1)
+         yc(i,1) = 1-tanh(BETAM*(1-yc(i,1)))/tanh(BETAM)
+         zc(i,1) = zscale*zc(i,1)
+      enddo
+
+
+      return
+      end
+c-----------------------------------------------------------------------
+      subroutine usrdat2   ! This routine to modify mesh coordinates
+      implicit none
+      return
+      end
+c-----------------------------------------------------------------------
+      subroutine usrdat3
+      implicit none
+      include 'SIZE'
+      include 'TOTAL'
+
+      param(54) = -1  ! use >0 for const flowrate or <0 bulk vel
+                      ! flow direction is given by (1=x, 2=y, 3=z) 
+      param(55) = 1.0 ! flowrate/bulk-velocity 
+
+      return
+      end
+c-----------------------------------------------------------------------
+
