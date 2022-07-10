@@ -7,7 +7,7 @@
 stopAt = endTime
 endTime = 5000
 
-dt = 0.01
+dt = 0.1
 timeStepper = bdf3
 variableDt = yes
 targetCFL = 0.5
@@ -25,11 +25,11 @@ equation = incompNS
 
 [PRESSURE]
 preconditioner = semg_XXT
-residualTol = 1e-5
+residualTol = 1e-4
 residualProj = yes
 
 [VELOCITY]
-residualTol = 1e-7
+residualTol = 1e-4
 density = 1
 viscosity = -2000
 
