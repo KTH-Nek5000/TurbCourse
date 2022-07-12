@@ -27,10 +27,13 @@ def modes(nmod,db,info,L,if3D):
     for m in range(nmod+1):
         
         data = db
+     
         nGLLe = data.lr1[0]*data.lr1[1]*data.lr1[2]
         # Create data structure to outpost file equal to the original (data_o)
         # Save u,v (and w if 3D) in the u,v,w velocity componets field
         data_o = data           
+
+
         k = 0                                                # index to loop on u-block
         k1 = nGLLe*data.nel    # index to loop on v-block
         k2 = k1*2                                            # index to loop on w-block
@@ -73,6 +76,8 @@ def modes(nmod,db,info,L,if3D):
 
         if (info['module']=='POD'):
             # Writing data in nek/visit format
+            data_o.time = m
+
             neksuite.writenek(info['outputPath']+'PODmod'+info['caseName']+'0.f'+str(m).zfill(5),data_o)
             print('POD mode number %d has been saved' % (m))
         elif (info['module']=='DMD'): 
