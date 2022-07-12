@@ -1,0 +1,65 @@
+#------- INPUT SETTINGS -------------------------------------
+The input parameters are described below. Please keep the same file format.
+The reader module takes as input each variable one space after the equal.
+
+0)  Select available modules
+- POD
+- DMD
+1)  Path to the *.f files created by Nek5000
+- Input files path
+- Output files path
+2)  Case name
+3)  Number of snapshots
+4)  Select 3D or 2D case (True if 3D)
+5)  Define variable of interest.
+- The type of variable is "scalar" or "vector".
+- If "scalar" the qoiName can be "temperature", "pressure", "uvel", "vvel", "wvel"
+- If "vector" the qoiName can only be "velocity".
+6)  Impose symmetry
+- Logical flag to impose or not symmetry
+- Mirrored fields path
+- Case name for mirrored fields
+7)  Number of eigenvalues to plot (if plotter is active)
+8)  Largest POD mode to save for Visit visualisation
+9)  Largest reconstructed snapshot to save for Visit visualisation
+10) Number of modes to use for reconstructing the flow
+11) To save compressed pickle file
+12) To read compressed pickle file
+13) Others parameters
+- (FOR DMD) Reduced rank parameter. Truncation factor for DMD construction/prediction
+- Number of the initial snapshot
+
+
+#0)
+     module = POD
+#1) 
+     path_in = HERE
+     path_out = HERE
+#2) 
+     caseName = HERE
+#3) 
+     nsnap = 40
+#4) 
+     if3D = True
+#5) 
+     variable = vector
+     qoiName = velocity 
+#6) 
+     ifsym = True
+     path_m = HERE
+     caseName_m = HERE
+#7) 
+     nplt = 5
+#8) 
+     outMod = 2
+#9) 
+     outSnp = 0
+#10) 
+     maxMode = 10 
+#11) 
+     ifPickSave = False
+#12) 
+     ifPickRead = True
+#13)
+     rpar   = 5000
+     tprdc  = 1
