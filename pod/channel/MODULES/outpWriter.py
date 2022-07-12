@@ -80,7 +80,11 @@ def modes(nmod,db,info,L,if3D):
             neksuite.writenek(info['outputPath']+'DMDmod'+info['caseName']+'0.f'+str(m).zfill(5),data_o)
             print('DMD mode number %d has been saved' % (m))
 
-     
+    print('Writing: '+info['outputPath']+'PODmod'+info['caseName']+'.nek5000')
+    with open(info['outputPath']+'PODmod'+info['caseName']+'.nek5000', "w") as f:
+       f.write('filetemplate: PODmod' + info['caseName']+'%01d.f%05d\n')
+       f.write('firsttimestep: 0\n')
+       f.write('numtimesteps: %d\n' % (nmod+1))
     
     return
 
