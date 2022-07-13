@@ -13,12 +13,12 @@ SimEx/FLOW, Engineering Mechanics, KTH Royal Institute of Technology, Stockholm,
 
 import sys
 # Local modules
-sys.path.append('$PATH/MODULES/')
+sys.path.append('/home/pschlatt/NEK/git/TurbCourse/pod/channel/MODULES/')
 from snapMaker   import snpAssembler,snpAssembler_sym
 from reader      import read_input
 from dbMaker     import dbMan,dbMan_sym
 from PODmodule   import POD
-from DMDmodule   import DMD
+#from DMDmodule   import DMD
 from plotter     import pplot,pplotc,savetxt
 from outpWriter  import modes,snaprcn,prdct
 from pickManager import pickReader,pickReader_sym
@@ -38,7 +38,7 @@ from pickManager import pickReader,pickReader_sym
 qoiName,nsnap,nplt,r,timeprdc,       \
 outMod,outSnp,maxMode,               \
 if3D,ifsym,ifPickSave,ifPickRead,    \
-info,info_m,info_s  = read_input('$PATH/input.txt')
+info,info_m,info_s  = read_input('/home/pschlatt/NEK/git/TurbCourse/pod/channel/input.txt')
 
 
 

@@ -38,22 +38,33 @@ def pplot(A2,Lam2,nplt,iff):
     if (iff=='coeff'):
     
         # Coefficient matrix
-        plt.imshow(A2)
-        plt.title('Coefficients Matrix A2')
+        plt.pcolor(A2[:,0:nplt])
+        plt.title('Time coefficients')
         plt.colorbar()
+        plt.xlabel('mode')
+        plt.ylabel('step')
+        plt.clim(-0.1,0.1)
+        plt.show()
+
+        plt.plot(A2[:,3])
+        plt.title('mode 3')
+        plt.xlabel('step')
+        plt.ylabel('amplitude')
         plt.show()
         
     elif (iff=='eigen'):   
         # Eigenvalues
-        print('Eigenvalues:',Lam2[0:nplt])
-        plt.plot(np.log((Lam2[0:nplt])/sum(Lam2[0:nplt])),'^--r',label=r'$\lambda_k/\sum_{i=1}^m{\lambda_i}$')
+        print('singular values:',Lam2[0:nplt])
+        plt.plot(np.arange(nplt),np.log10((Lam2[0:nplt])/sum(Lam2[0:nplt])),'^--r',label=r'$\lambda_k/\sum_{i=0}^m{\lambda_i}$')
         # plt.plot(np.cumsum(Lam2[0:nplt])/sum(Lam2[0:nplt]),'o-b',label='$\sum_{i=1}^k\lambda_i/\sum_{i=1}^m{\lambda_i}$')
         plt.xlabel(r'$k$')
+        plt.ylabel('log10 energy')
         plt.legend(loc='best')
         plt.grid()
         plt.show()
 
-        plt.plot(np.cumsum(Lam2[0:nplt])/sum(Lam2[0:nplt]),'o-b',label='$\sum_{i=1}^k\lambda_i/\sum_{i=1}^m{\lambda_i}$')
+        # here we only show the cummulative sum without the mean
+        plt.plot(np.arange(nplt-1)+1,np.cumsum(Lam2[1:nplt])/sum(Lam2[1:nplt]),'o-b',label='$\sum_{i=1}^k\lambda_i/\sum_{i=1}^m{\lambda_i}$')
         plt.xlabel(r'$k$')
         plt.legend(loc='best')
         plt.grid()

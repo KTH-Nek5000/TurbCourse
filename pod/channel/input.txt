@@ -20,7 +20,7 @@ The reader module takes as input each variable one space after the equal.
 - Mirrored fields path
 - Case name for mirrored fields
 7)  Number of eigenvalues to plot (if plotter is active)
-8)  Largest POD mode to save for Visit visualisation
+8)  Largest POD mode to save for Visit visualisation (0 only mean)
 9)  Largest reconstructed snapshot to save for Visit visualisation
 10) Number of modes to use for reconstructing the flow
 11) To save compressed pickle file
@@ -33,33 +33,33 @@ The reader module takes as input each variable one space after the equal.
 #0)
      module = POD
 #1) 
-     path_in = HERE
-     path_out = HERE
+     path_in = /home/pschlatt/NEK/run/
+     path_out = /home/pschlatt/NEK/run/PODmodes/
 #2) 
-     caseName = HERE
+     caseName = channel
 #3) 
-     nsnap = 40
+     nsnap = 2000
 #4) 
      if3D = True
 #5) 
      variable = vector
      qoiName = velocity 
 #6) 
-     ifsym = True
+     ifsym = False
      path_m = HERE
      caseName_m = HERE
 #7) 
-     nplt = 5
+     nplt = 50
 #8) 
-     outMod = 2
+     outMod = 50
 #9) 
-     outSnp = 0
+     outSnp = 100
 #10) 
-     maxMode = 10 
+     maxMode = 6
 #11) 
      ifPickSave = False
 #12) 
-     ifPickRead = True
+     ifPickRead = False
 #13)
      rpar   = 5000
-     tprdc  = 1
+     tprdc  = 999

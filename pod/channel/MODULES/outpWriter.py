@@ -152,10 +152,17 @@ def snaprcn(nmod,db,info,L,A2,maxMode,if3D):
 
 
 
-        # Writing data in nek/visit format
+        # Writing data in nek/visit format 
+        data_o.time = m
         neksuite.writenek(info['outputPath']+'PODsnaprcn'+info['caseName']+'0.f'+str(m).zfill(5),data_o)
         print('Snapshot reconstructed  number %d has been saved' % (m))
-     
+
+    print('Writing: '+info['outputPath']+'PODsnaprcn'+info['caseName']+'.nek5000')
+    with open(info['outputPath']+'PODsnaprcn'+info['caseName']+'.nek5000', "w") as f:
+       f.write('filetemplate: PODsnaprcn' + info['caseName']+'%01d.f%05d\n')
+       f.write('firsttimestep: 0\n')
+       f.write('numtimesteps: %d\n' % (nmod+1))
+    
     
     return
 
