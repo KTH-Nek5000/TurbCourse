@@ -38,7 +38,7 @@ The reader module takes as input each variable one space after the equal.
 #2) 
      caseName = channel
 #3) 
-     nsnap = 2000
+     nsnap = 1000
 #4) 
      if3D = True
 #5) 
@@ -53,9 +53,9 @@ The reader module takes as input each variable one space after the equal.
 #8) 
      outMod = 50
 #9) 
-     outSnp = 100
+     outSnp = 200
 #10) 
-     maxMode = 6
+     maxMode = 2
 #11) 
      ifPickSave = False
 #12) 
