@@ -1,5 +1,8 @@
 Simulation and POD analysis of the marginally turbulent flow in a minimal channel at low Reynolds number using Nek5000
 
+The documentation of the case is in `minimal_channel_guide.ipynb`.
+
+
 __Requirements:__
 
 - Fortran compiler (gfortran)
