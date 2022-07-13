@@ -5,9 +5,9 @@
 
 #startFrom = start0.f04000 time=0.
 stopAt = endTime
-endTime = 500
+endTime = 2000
 
-dt = 0.1
+dt = 1.
 timeStepper = bdf3
 variableDt = yes
 targetCFL = 0.5
