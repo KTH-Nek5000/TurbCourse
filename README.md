@@ -8,3 +8,6 @@ A guide to simulation and post-processing of the turbulent flow over a periodic 
 
 ### `/minimal_channel/`
 A tutorial for running a minimal channel simulation in `Nek5000`, and doing a postprocessing using proper orthogonal decomposition (POD).
+
+### `/pod/`
+A python package for POD using Nek5000 data.
