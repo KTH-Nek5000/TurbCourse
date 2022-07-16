@@ -1,0 +1,24 @@
+#!/bin/bash
+export CASE="mixlay"   
+
+export PPLIST=""
+export USR=""
+
+for il in "$@"
+do 
+case $il in 
+         --clean)
+                #${SOURCE_ROOT}/bin/makenek clean
+                ./makenek clean
+                shift
+                ;;
+         --all)
+#                ${SOURCE_ROOT}/bin/makenek ${CASE}
+		./makenek ${CASE}
+                #copy the run file to run/
+                cp nek5000 ../run
+                shift
+                ;;
+esac
+done
+

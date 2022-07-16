@@ -1,0 +1,239 @@
+!Case Parameters
+#define MIXHEIGHT 10.
+
+
+c-----------------------------------------------------------------------
+c USER-DEFINED FUNCTIONS 
+c    Mixing layer: two layers with different temperature 
+c    For simplicity, transport properties are fixed
+c-----------------------------------------------------------------------
+      subroutine uservp (ix,iy,iz,ieg)
+
+      integer ix,iy,iz,ieg,e
+      real scalars_(3)   !size=temperature+scalars
+
+      include 'SIZE'
+      include 'TOTAL'
+      include 'NEKUSE'
+
+      e = gllel(ieg)
+      scalars_(1)=t(ix,iy,iz,e,1)   
+
+      !!SR: Transport properties (species and mixture)
+      if (ifield.eq.1) then      !VELOCITY+PRESS
+         utrans  = param(1)      !density
+         udiff   = param(2)      !viscosity
+
+      else if (ifield.eq.2) then   !TEMPERATURE
+         utrans  = param(7)        !rho*Cp
+         udiff   = param(8)        !conductivity
+      endif
+
+      return
+      end
+
+C-----------------------------------------------------------------------
+      subroutine userf  (ix,iy,iz,ieg)
+      include 'SIZE'
+      include 'TOTAL'
+      include 'NEKUSE'
+
+      ffx = 0.0
+      ffy = 0.0
+      ffz = 0.0   ! you can fix the flow rate through param(54), param(55)
+
+      return
+      end
+
+!--------------------------------------------------
+      subroutine userq  (ix,iy,iz,ieg)
+      return
+      end
+
+!--------------------------------------------------
+      subroutine userchk
+      !implicit none   commented by saleh
+
+      include 'SIZE'
+      include 'GEOM'                    ! xm1, ym1, zm1
+      include 'SOLN'                    ! T
+      include 'MASS'                    !BM1 for lambda2
+      include 'TSTEP'                   ! ISTEP
+      include 'INPUT'           ! PARAM(12) (DT)
+      include 'CHKPOINT'
+!      include 'USERPAR'
+
+      !include 'TOTAL'
+      real ffx_new,ffy_new,ffz_new  !saleh
+      common /cforce/ ffx_new,ffy_new,ffz_new
+      real x0(3)
+      save x0
+
+      real e2
+      integer n
+      real ubar
+
+!-------------------------------------------------- 
+c      ! Restart code
+      if (ISTEP.eq.0) then
+         CHKPTSTEP=uparam(4)
+         if (uparam(3).eq.1) then
+            IFCHKPTRST=.TRUE.
+         else
+            IFCHKPTRST=.FALSE.
+         endif
+      endif
+      
+      call checkpoint           ! Restart check
+
+      ! Stats code
+      !!call stat_avg
+
+      n=nx1*ny1*nz1*nelv
+
+      !write out bm1
+      if (ISTEP.eq.0) then
+          call outpost(bm1,ym1,zm1,bm1,t,'MAS')
+      endif
+
+
+      return
+      end
+
+!--------------------------------------------------
+      subroutine userbc (ix,iy,iz,iside,ieg)
+
+      !implicit none
+      integer ix,iy,iz,iside,eg,e
+      !real y_
+      include 'SIZE' 
+      include 'PARALLEL'  ! GLLEL
+      include 'NEKUSE'
+      include 'GEOM'
+      include 'TSTEP'  !SR: for ifield
+
+      e = gllel(ieg)
+      pa = 0.0
+
+      if (cbu.eq.'o  ') then       !Dong outflow BC
+         U0 = 0.5*1.1                  ! characteristic velocity
+         delta = 0.1               ! small positive constant
+         pa = dongOutflow(ix,iy,iz,e,iside,U0,delta)         
+
+      elseif (cbu.eq.'v  ') then   !'v  '
+
+         !!inlet profile for mixing layer
+         if (y.lt.(MIXHEIGHT/2)) then
+            ux= 0.1
+            if (ifield.gt.1) then  
+               if (ifield.eq.2) temp=0.5    !temperature
+            endif
+         else 
+            ux= 1.0
+            if (ifield.gt.1) then  
+               if (ifield.eq.2) temp=1      !temperature
+            endif
+         endif  !y
+
+         uy= 0.0 
+         uz= 0.0 
+
+      endif  !cbu
+
+      return
+      end
+      
+!--------------------------------------------------
+      subroutine useric (ix,iy,iz,ieg)
+
+      implicit none
+
+      integer ix,iy,iz,ieg !,e
+      !real y_
+
+      include 'SIZE'
+      include 'TOTAL'
+      include 'NEKUSE'
+
+      if (y.lt.(MIXHEIGHT/2)) then
+         ux= 0.1
+         if (ifield.gt.1) then  
+            if (ifield.eq.2) temp=0.5    !temperature
+         endif
+      else 
+         ux= 1.0
+         if (ifield.gt.1) then  
+            if (ifield.eq.2) temp=1.0    !temperature
+         endif
+      endif
+
+      uy= 0.0 
+      uz= 0.0 
+
+      return
+      end
+!--------------------------------------------------
+      subroutine usrdat
+      return
+      end
+!--------------------------------------------------
+      subroutine usrdat2
+      !implicit none
+
+      include 'SIZE'
+      include 'TOTAL'
+
+      !set all non-periodic BCs here. This is required due to generating mesh by gmsh and converting it by gmsh2nek
+      !Here are the IDs according to ellipse.msh:
+      ! 1 "inlet"
+      ! 2 "outlet"
+      ! 3 "wall"
+      ! 4 "freestreamUp"
+      ! 5 "freestreamLo"
+      do iel=1,nelv
+         do ifc=1,2*ndim
+            id_face = bc(5,ifc,iel,1)
+            if (id_face.eq.1) then        ! inlet 
+               cbc(ifc,iel,1) = 'v  '
+            elseif (id_face.eq.2) then    ! outlet
+               cbc(ifc,iel,1) = 'o  '     ! use either 'O  ' with sponge or 'o  ' with Dong BC
+            elseif (id_face.eq.3) then    ! wall
+               cbc(ifc,iel,1) = 'W  '
+            elseif (id_face.eq.4 .OR. id_face.eq.5) then    ! surface 4/5 for free-stream
+               cbc(ifc,iel,1) = 'ON '
+            endif
+         enddo
+      enddo
+      return
+      end
+
+
+!--------------------------------------------------
+      subroutine usrdat3
+c      implicit none
+
+      return
+      end
+
+c-----------------------------------------------------------------------
+      function dongOutflow(ix,iy,iz,iel,iside,u0,delta)
+
+      include 'SIZE'
+      include 'SOLN'
+      include 'GEOM'
+
+      real sn(3)
+
+      ux = vx(ix,iy,iz,iel)
+      uy = vy(ix,iy,iz,iel)
+      uz = vz(ix,iy,iz,iel)
+
+      call getSnormal(sn,ix,iy,iz,iside,iel)
+      vn = ux*sn(1) + uy*sn(2) + uz*sn(3) 
+      S0 = 0.5*(1.0 - tanh(vn/u0/delta))
+
+      dongOutflow = -0.5*(ux*ux+uy*uy+uz*uz)*S0
+
+      return
+      end
+C-----------------------------------------------------------------------

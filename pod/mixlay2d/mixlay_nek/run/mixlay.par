@@ -1,0 +1,55 @@
+# par file for flow over a 2D ellipse
+#
+[GENERAL]
+	#stopAt = numSteps 
+	#numSteps = 10000
+	stopAt = endTime  
+        endTime = 5000.01
+	writeControl = runTime  #timeStep
+	writeInterval = 1
+	dealiasing = yes
+
+        ##Time stepping
+	dt = -2e-03         #fixed time step size
+        #dt = 0
+        timeStepper = bdf3
+        #extrapolation = OIFS
+        variableDt = no     #variable time step size
+        targetCFL = 0.5
+
+        ##Filtering
+	#filtering = explicit
+	#filterWeight = 0.01
+	#filterCutoffRatio = 0.84
+        filtering = hpfrt
+        filterWeight = 10
+        filterCutoffRatio = 0.9
+        
+        ##Saving&Restart 
+	userParam03 = 0	   	 # IFCHKPTRST (1: if restarted)
+	userParam04 = 2000      # CHKPTSTEP
+	userParam05 = 10	 # STAT_COMP --> param(68)
+	userParam06 = 20000	 # STAT_OUTP --> param(69)
+
+[PROBLEMTYPE]
+	equation = incompNS # incompLinNS
+	#numberOfPerturbations = 1 # for linear solver
+	#solveBaseflow = no # for linear solver
+	#variableProperties = yes
+
+[PRESSURE]
+	residualtol = 1e-06
+	residualproj = yes
+
+[VELOCITY]
+	viscosity = -5000
+	density = 1.
+	residualtol = 1e-08
+	residualproj = yes
+
+[TEMPERATURE]
+	conductivity = 0.005
+	rhoCp = 1.
+	residualtol = 1e-08
+	residualproj = yes
+
