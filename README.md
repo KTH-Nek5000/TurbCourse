@@ -1,6 +1,7 @@
 # TurbCourse
 ## A course in turbulence simulation and analysis using `Nek5000`.
 
+Slides: [link](https://kth-my.sharepoint.com/:f:/g/personal/philipps_ug_kth_se/Em2jQDxcMoNHvefn-HnSCjYBYNxcwzS4YmYfV9vUH1upxg?e=7R8k2u)
 
 ## List of contents:
 ### `/phill_stats/`
