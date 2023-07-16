@@ -4,7 +4,7 @@
 	#stopAt = numSteps 
 	#numSteps = 10000
 	stopAt = endTime  
-        endTime = 5000.01
+        endTime = 1000.
 	writeControl = runTime  #timeStep
 	writeInterval = 1
 	dealiasing = yes

@@ -126,7 +126,7 @@ c      ! Restart code
          if (y.lt.(MIXHEIGHT/2)) then
             ux= 0.1
             if (ifield.gt.1) then  
-               if (ifield.eq.2) temp=0.5    !temperature
+               if (ifield.eq.2) temp=0     !temperature
             endif
          else 
             ux= 1.0
@@ -158,7 +158,7 @@ c      ! Restart code
       if (y.lt.(MIXHEIGHT/2)) then
          ux= 0.1
          if (ifield.gt.1) then  
-            if (ifield.eq.2) temp=0.5    !temperature
+            if (ifield.eq.2) temp=0.    !temperature
          endif
       else 
          ux= 1.0
@@ -210,13 +210,17 @@ c      ! Restart code
 
 !--------------------------------------------------
       subroutine usrdat3
-c      implicit none
+      implicit none
 
       return
       end
 
 c-----------------------------------------------------------------------
       function dongOutflow(ix,iy,iz,iel,iside,u0,delta)
+      implicit none
+
+      real dong Outflow,vn,S0,ux,uy,uz,u0,delta
+      integer iside,ix,iy,iz,iel
 
       include 'SIZE'
       include 'SOLN'
