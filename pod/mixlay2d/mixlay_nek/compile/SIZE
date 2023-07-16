@@ -41,3 +41,7 @@ c
       ! INTERNALS
       include 'SIZE.inc'
 
+
+c automatically added by makenek
+      integer lelr
+      parameter (lelr=lelt) ! max number of local elements per restart file

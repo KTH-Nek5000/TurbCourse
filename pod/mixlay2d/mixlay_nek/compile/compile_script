@@ -1,24 +1,51 @@
 #!/bin/bash
-export CASE="mixlay"   
 
-export PPLIST=""
-export USR=""
+function error_quit {
+    echo -e "$@"
+    echo
+    echo -e 'Usage:'
+    echo -e './compile_script --clean'
+    echo -e '   To clean build direcrtory. Makenek will ask for cleaning 3rd-party libraries.'
+    echo
+    echo -e './compile_script --all'
+    echo -e '   To compile the code.'
+    exit 1
+}
+
+#parameters
+export CASE="mixlay"
+export NEK_SOURCE_ROOT="/home/pschlatt/NEK/Nek5000"
+export FC="mpif90"
+export CC="mpicc"
+export CXX="mpicxx"
+export CFLAGS=""
+export PPLIST="MPIIO"
+export USR="IO_tools.o chkpoint.o"
+export USR_LFLAGS=""
+
+# arguments
+args=("$@")
+argsnr=$#
+
+# check arguments
+# parameters number check
+if [ $[argsnr] -ne 1 ]; then
+    error_quit 'Wrong arguments number!'
+fi
 
 for il in "$@"
-do 
-case $il in 
-         --clean)
-                #${SOURCE_ROOT}/bin/makenek clean
-                ./makenek clean
+do
+case $il in
+        --clean)
+                ${NEK_SOURCE_ROOT}/bin/makenek clean
                 shift
                 ;;
-         --all)
-#                ${SOURCE_ROOT}/bin/makenek ${CASE}
-		./makenek ${CASE}
-                #copy the run file to run/
-                cp nek5000 ../run
+        --all)
+                ${NEK_SOURCE_ROOT}/bin/makenek ${CASE}
                 shift
+                ;;
+        *) 
+                error_quit 'Wrong argument.'
                 ;;
 esac
 done
-
