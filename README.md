@@ -3,7 +3,7 @@
 
 Updated 2024-07-16
 
-Slides: [link]([https://kth-my.sharepoint.com/:f:/g/personal/philipps_ug_kth_se/Eswwaxk6Bh1FiEUjnnK5HLQBotLIGG2zZsvnJZOfZEm9qQ?e=5axoig])
+Slides: [link](https://kth-my.sharepoint.com/:f:/g/personal/philipps_ug_kth_se/Eswwaxk6Bh1FiEUjnnK5HLQBotLIGG2zZsvnJZOfZEm9qQ?e=5axoig)
 
 ## List of contents:
 ### `/phill_stats/`
