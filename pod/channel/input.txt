@@ -27,39 +27,41 @@ The reader module takes as input each variable one space after the equal.
 12) To read compressed pickle file
 13) Others parameters
 - (FOR DMD) Reduced rank parameter. Truncation factor for DMD construction/prediction
-- Number of the initial snapshot
+- Number of the initial snapshots
+- TIme interval between snapshots
 
 
 #0)
-     module = POD
+     module = DMD
 #1) 
-     path_in = /home/pschlatt/NEK/run/
-     path_out = /home/pschlatt/NEK/run/PODmodes/
+     path_in = path/to/dns/data
+     path_out = path/to/dmd/output
 #2) 
-     caseName = channel
+     caseName = cyl
 #3) 
-     nsnap = 1000
+     nsnap = 200
 #4) 
-     if3D = True
+     if3D = False
 #5) 
-     variable = vector
-     qoiName = velocity 
+     variable = scalar
+     qoiName = temperature
 #6) 
      ifsym = False
      path_m = HERE
      caseName_m = HERE
 #7) 
-     nplt = 50
+     nplt = 20
 #8) 
-     outMod = 50
+     outMod = 10
 #9) 
-     outSnp = 200
+     outSnp = 2
 #10) 
-     maxMode = 2
+     maxMode = 10
 #11) 
      ifPickSave = False
 #12) 
      ifPickRead = False
 #13)
-     rpar   = 5000
-     tprdc  = 999
+     rpar   = 21
+     tprdc  = 1
+     deltaT = 0.1

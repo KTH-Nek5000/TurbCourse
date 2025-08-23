@@ -34,6 +34,7 @@ def read_input(filename):
    ifPickRead = eval(params['ifPickRead'])
    r          = int(params['rpar'])
    timeprdc   = int(params['tprdc'])
+   timestep   = float(params['deltaT'])
    
   
    # All snapshots are used.
@@ -49,7 +50,8 @@ def read_input(filename):
            'startID':start_,
            'endID':end_,
            'variable':variable,
-           'qoiName':qoiName}
+           'qoiName':qoiName,
+           'deltaT':timestep}
    # - mass matrix ( X-VELOCITY COMPONENT IS USED, SAVED HERE bm1 MATRIX)
    massName = 'bm1'+caseName
    info_m = {'dataPath':path,

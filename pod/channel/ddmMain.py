@@ -12,14 +12,16 @@ SimEx/FLOW, Engineering Mechanics, KTH Royal Institute of Technology, Stockholm,
 """
 
 import sys
+
 # Local modules
-sys.path.append('/home/pschlatt/NEK/git/TurbCourse/pod/channel/MODULES/')
+sys.path.append('C:/Users/gaurav/Desktop/pod/MODULES')
 from snapMaker   import snpAssembler,snpAssembler_sym
 from reader      import read_input
 from dbMaker     import dbMan,dbMan_sym
 from PODmodule   import POD
-#from DMDmodule   import DMD
-from plotter     import pplot,pplotc,savetxt
+from DMDmodule   import DMD
+from plotter     import pplot,pplotc,savetxt,saveOmega
+from freqAnalysis import freqPOD
 from outpWriter  import modes,snaprcn,prdct
 from pickManager import pickReader,pickReader_sym
 
@@ -38,7 +40,7 @@ from pickManager import pickReader,pickReader_sym
 qoiName,nsnap,nplt,r,timeprdc,       \
 outMod,outSnp,maxMode,               \
 if3D,ifsym,ifPickSave,ifPickRead,    \
-info,info_m,info_s  = read_input('/home/pschlatt/NEK/git/TurbCourse/pod/channel/input.txt')
+info,info_m,info_s  = read_input('C:/Users/gaurav/Desktop/pod/input.txt')
 
 
 
@@ -49,7 +51,7 @@ if ifsym:
     if ifPickRead:    # reading pickle 
         Usnp,db,db_s,mvect = pickReader_sym(info,info_s)
     else:             # building data
-        db,db_m,db_s,data_ms = dbMan_sym(info,'field',info_m,'mass',info_s,'field')       # Database generation
+        db,db_m,db_s,data_ms = dbMan_sym(info,'field',if3D,info_m,'mass',info_s,'field')       # Database generation
         Usnp,mvect = snpAssembler_sym(db,db_s,data_ms,info,nsnap,ifsym,if3D,ifPickSave)   # Snapshots matrix assembly
         
 else:
@@ -57,10 +59,10 @@ else:
     if ifPickRead:    # reading pickle 
         Usnp,db,mvect = pickReader(info)
     else:             # building data
-        db,db_m,data_ms = dbMan(info,'field',info_m,'mass')                                # Database generation
+        db,db_m,data_ms = dbMan(info,'field',if3D,info_m,'mass')                                # Database generation
         Usnp,mvect = snpAssembler(db,data_ms,info,nsnap,ifsym,if3D,ifPickSave)             # Snapshots matrix assembly     
     
-
+print(db['data'][0].var)
 
 
 # ------- CALCULATION
@@ -69,20 +71,21 @@ if (info['module']=='POD'):
     L,Lam2,R,A2 = POD(Usnp,mvect,nsnap,ifsym)
 elif (info['module']=='DMD'): 
     # DMD
-    Phi,Lambdat,a1 = DMD(Usnp,mvect,nsnap,r,ifsym)
+    Phi,Lambdat,a1,omega = DMD(Usnp,mvect,nsnap,r,ifsym, info['deltaT'])
 
 
 
 
 # ------- PLOTS
 if (info['module']=='POD'):
-    pplot(A2,Lam2,nplt,'coeff')
-    pplot(A2,Lam2,nplt,'eigen')
+    # pplot(A2,Lam2,nplt,'coeff')
+    pplot(A2,Lam2,nplt,'eigen',info)
     savetxt(Lam2,info)
+    freqPOD(A2,10,nplt,0.1,info)
 elif (info['module']=='DMD'): 
-    pplotc(Lambdat)
+    pplotc(Lambdat, info)
     savetxt(Lambdat,info)
-
+    saveOmega(omega,info)
 
 
 # ------- OUTPUT
@@ -91,6 +94,6 @@ if (info['module']=='POD'):
     snaprcn(outSnp,db['data'][0],info,L,A2,maxMode,if3D)
 elif (info['module']=='DMD'): 
     modes(outMod,db['data'][0],info,Phi.real,if3D)
-    prdct(timeprdc,db['data'][0],info,Phi,a1,Lambdat,if3D)
+    #prdct(timeprdc,db['data'][0],info,Phi,a1,Lambdat,if3D)
     
     

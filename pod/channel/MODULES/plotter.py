@@ -25,7 +25,7 @@ pylab.rcParams.update(params)
 
 
 
-def pplot(A2,Lam2,nplt,iff):
+def pplot(A2,Lam2,nplt,iff,info):
     """
     Module to plot eigenvalues spectrum and cumulative sum
     Args: 
@@ -53,28 +53,30 @@ def pplot(A2,Lam2,nplt,iff):
         plt.show()
         
     elif (iff=='eigen'):   
-        # Eigenvalues
-        print('singular values:',Lam2[0:nplt])
-        plt.plot(np.arange(nplt),np.log10((Lam2[0:nplt])/sum(Lam2[0:nplt])),'^--r',label=r'$\lambda_k/\sum_{i=0}^m{\lambda_i}$')
+        # Eigenvalues without mean
+        print('singular values:',Lam2[1:nplt])
+        plt.plot(np.arange(1,nplt),(Lam2[1:nplt])*100/sum(Lam2[1:nplt]),'^--r',label=r'$\lambda_k/\sum_{i=0}^m{\lambda_i}$')
         # plt.plot(np.cumsum(Lam2[0:nplt])/sum(Lam2[0:nplt]),'o-b',label='$\sum_{i=1}^k\lambda_i/\sum_{i=1}^m{\lambda_i}$')
-        plt.xlabel(r'$k$')
-        plt.ylabel('log10 energy')
-        plt.legend(loc='best')
+        plt.xlabel(r'Modes ($k$)')
+        plt.ylabel('Energy %')
+        #plt.legend(loc='best')
         plt.grid()
-        plt.show()
+        plt.savefig(info['outputPath']+"eigen.png")
+        plt.close()
 
         # here we only show the cummulative sum without the mean
         plt.plot(np.arange(nplt-1)+1,np.cumsum(Lam2[1:nplt])/sum(Lam2[1:nplt]),'o-b',label='$\sum_{i=1}^k\lambda_i/\sum_{i=1}^m{\lambda_i}$')
         plt.xlabel(r'$k$')
         plt.legend(loc='best')
         plt.grid()
-        plt.show()
+        plt.savefig(info['outputPath']+"sum.png")
+        plt.close()
     
     return 
 
 
 
-def pplotc(Lambdat):
+def pplotc(Lambdat, info):
     """
     Module to plot eigenvalues spectrum 
     Args: 
@@ -86,7 +88,7 @@ def pplotc(Lambdat):
     thet=np.linspace(0,2*np.pi,100)
     plt.plot(np.cos(thet),np.sin(thet),'-k')
     for i in range(len(Lambdat)):
-        if abs(Lambdat[i])<1:
+        if abs(Lambdat[i])<=1:
            plt.plot(Lambdat[i].real,Lambdat[i].imag,'ob',mfc='b',label=r'$|\lambda|<1$') 
         elif abs(Lambdat[i])>1:
            plt.plot(Lambdat[i].real,Lambdat[i].imag,'or',mfc='r',label=r'$|\lambda|>1$') 
@@ -95,11 +97,32 @@ def pplotc(Lambdat):
     plt.ylabel(r'$Im(\tilde{\Lambda})$')
     plt.grid(alpha=0.4)
     plt.title(r'Eigenvalues $\tilde{\mathbf{\Lambda}}$')
-    plt.show()    
+    plt.savefig(info['outputPath']+"eigen.png")
+    plt.close()  
   
     return 
 
+def saveOmega(omega, info):
+    """
+    Module to save the continuous eigenvalues spectrum
+    Args: 
+        - omega = time-continuous eigenvalues
+        - info = case info
+    """
 
+    fileName = info['outputPath']+'DMDomega.txt' #'./OUTPUT/eigns.txt'
+    F = open(fileName,'w') 
+    F.write("# Snapshots DMD result \n") 
+    F.write("# Time Continuous Eigenvalues of linear operator A: Ax=b \n")
+    F.write("# According to our convention the mode 0 is the mean value \n")  
+    F.write("# ------------------------------------------------------------------\n") 
+    F.write("# ------------------------------------------------------------------\n") 
+    F.write("# Real{Eigenvalues}\t Im{Eigenvalues}\t \n") 
+    F.write("# ------------------------------------------------------------------\n") 
+    for i in range(0,np.size(omega)):
+        F.write("%g\t%g\t \n" % \
+                (omega[i].real, omega[i].imag/2/np.pi))
+    F.close()
 
 def savetxt(Lam2,info):
     """
@@ -135,11 +158,11 @@ def savetxt(Lam2,info):
         F.write("# According to our convention the mode 0 is the mean value \n") 
         F.write("# ------------------------------------------------------------------\n") 
         F.write("# ------------------------------------------------------------------\n") 
-        F.write("# Real{Eigenvalues}\t Im{Eigenvalues}\t  \n") 
+        F.write("# Real{Eigenvalues}\t Im{Eigenvalues}\t Mag{Eigenvalues}\t Arg{Eigenvalues}\t  \n") 
         F.write("# ------------------------------------------------------------------\n") 
         for i in range(0,np.size(Lam2)):
-           F.write("%g\t%g\t \n" % \
-                   (Lam2[i].real, Lam2[i].imag ))
+           F.write("%g\t%g\t%g\t%g\t \n" % \
+                   (Lam2[i].real, Lam2[i].imag, abs(Lam2[i]), np.arctan2(Lam2[i].imag, Lam2[i].real)))
         F.close()
             
     return 

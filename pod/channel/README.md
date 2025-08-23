@@ -1,7 +1,7 @@
 # Data-Driven Methods for Nek5000 Simulations
 Python code for relevant data-driven techniques with I/O designed for Nek5000. So far, the available methods are:
   - Proper Orthogonal Decomposition (POD)
-  - Dynamic Mode Decomposition (DMD), removed for this short tutorial
+  - Dynamic Mode Decomposition (DMD)
 
 ## General:
   - Nek5000 V19
