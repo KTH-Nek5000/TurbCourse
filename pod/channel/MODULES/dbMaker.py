@@ -78,13 +78,6 @@ def dbCreator_v(info, if3D):
     pre_=caseName_+'0.f'
     nSnap=0
     ll =[]
-    
-    #------------------------------------------------------#
-    # Skips reading of variables other than QOI            #
-    # Helps in reducing reducing computational time        #
-    #                                                      #
-    # Added by Gaurav Gupta (IIST)                         #
-    #------------------------------------------------------#
 
     if if3D:
         vars = ['ux', 'uy', 'uz', 'pressure', 'temperature']

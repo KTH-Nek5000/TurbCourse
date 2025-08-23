@@ -23,7 +23,8 @@ def modes(nmod,db,info,L,if3D):
         - if3D  = to identify 3D or 2D case
         
     """    
-    
+    print(np.shape(L))
+
     for m in range(nmod+1):
         
         data = db
@@ -80,17 +81,24 @@ def modes(nmod,db,info,L,if3D):
 
             neksuite.writenek(info['outputPath']+'PODmod'+info['caseName']+'0.f'+str(m).zfill(5),data_o)
             print('POD mode number %d has been saved' % (m))
-        elif (info['module']=='DMD'): 
+            print('Writing: '+info['outputPath']+'PODmod'+info['caseName']+'.nek5000')
+        elif (info['module']=='DMD'):
             # Writing data in nek/visit format
+            data_o.time = m 
+
             neksuite.writenek(info['outputPath']+'DMDmod'+info['caseName']+'0.f'+str(m).zfill(5),data_o)
             print('DMD mode number %d has been saved' % (m))
-
-    print('Writing: '+info['outputPath']+'PODmod'+info['caseName']+'.nek5000')
-    with open(info['outputPath']+'PODmod'+info['caseName']+'.nek5000', "w") as f:
-       f.write('filetemplate: PODmod' + info['caseName']+'%01d.f%05d\n')
-       f.write('firsttimestep: 0\n')
-       f.write('numtimesteps: %d\n' % (nmod+1))
+            print('Writing: '+info['outputPath']+'DMDmod'+info['caseName']+'.nek5000')
     
+    if (info['module']=='POD'):
+        modname = 'PODmod'
+    elif (info['module']=='DMD'):
+        modname = 'DMDmod'
+    with open(info['outputPath']+modname+info['caseName']+'.nek5000', "w") as f:
+        f.write('filetemplate: '+ modname + info['caseName']+'%01d.f%05d\n')
+        f.write('firsttimestep: 0\n')
+        f.write('numtimesteps: %d\n' % (nmod+1))    
+
     return
 
 

@@ -15,7 +15,7 @@ def POD(Usnp,mvect,nsnap,ifsym):
     Module to compute POD modes
     Args: 
         - Usnp      = snapshots matrix Usnp
-        - mvect     = array with square of mass weights (nGLLe*ncomponents)
+        - mvect     = array with square root of mass weights (nGLLe*ncomponents)
         - nsnap      = number of snapshots
         - ifsym      = to mirror data wrt symmetry x axis
     Returns:

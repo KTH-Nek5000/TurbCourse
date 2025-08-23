@@ -31,23 +31,10 @@ plt.rcParams.update({
 
 
 def freqPOD(A2,maxModes,nplt,timestep,info):
-    '''
-    Written by Gaurav Gupta, Undergraduate (Aerospace Engineering) @
-    Indian Institute of Space Science and Technology, India (2025).
 
-    - Performs FFT of the POD coefficients to obtain the dominant frequency corresponding to the modes. 
-    - Writes the top 5 dominant frequencies from the FFT and saves the corresponding FFT plot for each mode.
+    #A2 -- POD Coefficients (m,n) where m is the number of snapshots and n is the mode
+    #Mode 0 is the time average.
 
-    Input Parameters:
-    - A2 -- POD Coefficients (m,n) where m is the number of snapshots and n is the mode.
-    - maxModes: Number of modes for frequency analysis.
-    - timestep: Timestep between the snapshots.
-
-    Note: 
-    - For accurate results, make sure the number of snapshots is equal to the number of modes i.e. nsnap=nplt.
-    - Mode 0 is the time average (Not considered by default for FFT analysis).
-    '''
-    
     fileName = info['outputPath']+'PODFreq.txt'
     F = open(fileName,'w')
     F.write("# Snapshots POD result \n") 
